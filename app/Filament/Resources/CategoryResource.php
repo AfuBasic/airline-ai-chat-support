@@ -6,9 +6,11 @@ use App\Filament\Resources\CategoryResource\Pages;
 use App\Filament\Resources\CategoryResource\RelationManagers;
 use App\Models\Categories;
 use Filament\Forms;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -23,7 +25,7 @@ class CategoryResource extends Resource
     {
         return $form
             ->schema([
-                //
+                TextInput::make('name')->string()->required(),
             ]);
     }
 
@@ -31,13 +33,14 @@ class CategoryResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('name')->searchable()
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -57,8 +60,8 @@ class CategoryResource extends Resource
     {
         return [
             'index' => Pages\ListCategories::route('/'),
-            'create' => Pages\CreateCategory::route('/create'),
-            'edit' => Pages\EditCategory::route('/{record}/edit'),
+            // 'create' => Pages\CreateCategory::route('/create'),
+            // 'edit' => Pages\EditCategory::route('/{record}/edit'),
         ];
     }
 }
