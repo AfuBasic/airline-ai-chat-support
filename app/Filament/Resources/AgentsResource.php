@@ -10,6 +10,7 @@ use Filament\Forms\Components\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -74,6 +75,27 @@ class AgentsResource extends Resource
             })
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('Reset Password')
+                    ->icon('heroicon-o-key')
+                    ->requiresConfirmation(function (Tables\Actions\Action $action, $record){
+                        $action->modalDescription('Are you sure you want to reset the password for' . $record->name .'?');
+                        $action->modalHeading('Reset Password');
+                        return $action;
+                    })
+                    ->action(function(User $record){
+                        $user = User::find($record->id);
+                        $newPassword = Str::random(12);
+                        $user->password = $newPassword;
+                        $user->first_time = true;
+                        $user->save();
+
+                        $notification = Notification::make()
+                            ->title('Password Reset Successfully')
+                            ->body('The password for ' . $record->name . ' has been reset to: ' . $newPassword)
+                            ->success()
+                            ->persistent()
+                            ->send();
+                    }),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
