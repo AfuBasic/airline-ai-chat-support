@@ -66,6 +66,9 @@ class AgentsResource extends Resource
                     ->label('Agent\'s Name')
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('email')
+                    ->label('Email')
+                    ->searchable()
             ])
             ->filters([
                 //
