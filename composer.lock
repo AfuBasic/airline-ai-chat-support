@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5c5a71da71dd9b1dfdf24ddbcf12a02f",
+    "content-hash": "fd5e6dedecd642fd7faafeb7bb5bfdde",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -3206,6 +3206,108 @@
                 }
             ],
             "time": "2025-07-17T05:12:15+00:00"
+        },
+        {
+            "name": "lucianotonet/groq-laravel",
+            "version": "v1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lucianotonet/groq-laravel.git",
+                "reference": "648205de085f3d2d28735068e84188fa45f24336"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lucianotonet/groq-laravel/zipball/648205de085f3d2d28735068e84188fa45f24336",
+                "reference": "648205de085f3d2d28735068e84188fa45f24336",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "*",
+                "illuminate/support": "*",
+                "lucianotonet/groq-php": "^1.3",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^6.0|^7.0|^8.0",
+                "phpunit/phpunit": "^9.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "Groq": "LucianoTonet\\GroqLaravel\\Facades\\Groq"
+                    },
+                    "providers": [
+                        "LucianoTonet\\GroqLaravel\\GroqServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "LucianoTonet\\GroqLaravel\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Luciano Tonet",
+                    "email": "tonetlds@gmail.com"
+                }
+            ],
+            "description": "Laravel integration for GroqCloud",
+            "support": {
+                "issues": "https://github.com/lucianotonet/groq-laravel/issues",
+                "source": "https://github.com/lucianotonet/groq-laravel/tree/v1.0.3"
+            },
+            "time": "2025-08-04T06:06:03+00:00"
+        },
+        {
+            "name": "lucianotonet/groq-php",
+            "version": "v1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lucianotonet/groq-php.git",
+                "reference": "326bf74ac4dabbf0c2e2ad2bc45fce8791e86c13"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lucianotonet/groq-php/zipball/326bf74ac4dabbf0c2e2ad2bc45fce8791e86c13",
+                "reference": "326bf74ac4dabbf0c2e2ad2bc45fce8791e86c13",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.9",
+                "php": "^8.1.0",
+                "vlucas/phpdotenv": "^5.6"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^11.3"
+            },
+            "type": "package",
+            "autoload": {
+                "psr-4": {
+                    "LucianoTonet\\GroqPHP\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Luciano Tonet",
+                    "email": "tonetlds@gmail.com"
+                }
+            ],
+            "description": "A powerful PHP library for seamless integration with the GroqCloud API",
+            "support": {
+                "issues": "https://github.com/lucianotonet/groq-php/issues",
+                "source": "https://github.com/lucianotonet/groq-php/tree/v1.3.0"
+            },
+            "time": "2025-06-03T20:28:50+00:00"
         },
         {
             "name": "masterminds/html5",
