@@ -17,7 +17,9 @@ return new class extends Migration
                 ->constrained()
                 ->onDelete('cascade');
             $table->unsignedBigInteger('agent_id')->nullable();
+            $table->enum('direction', ['inbound', 'outbound'])->default('inbound');
             $table->text('message');
+
             $table->timestamps();
         });
     }
