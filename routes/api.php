@@ -19,7 +19,7 @@ Route::middleware('auth:sanctum')->group(function() {
 
 Route::group(['prefix' => 'chat'], function() {
     Route::get('/start', [ChatController::class,'startChat']);
-    Route::group(['prefix' => '{conversation_id}'], function() {
+    Route::group(['prefix' => '{conversation}'], function() {
         Route::post('/message/send', [MessageController::class,'sendMessage']);
     });
 

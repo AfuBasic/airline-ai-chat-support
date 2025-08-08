@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('conversations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('agent_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('agent_id')->nullable()->constrained('users')->nullOnDelete();
             $table->enum('status', ['open', 'closed', 'escalated','resolved'])->default('open');
             $table->timestamp('started_at');
             $table->timestamp('ended_at')->nullable();
