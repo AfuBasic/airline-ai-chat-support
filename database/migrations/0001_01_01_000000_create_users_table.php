@@ -18,6 +18,9 @@ return new class extends Migration
             $table->enum('user_type', ['admin','agent'])->default('admin');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->boolean('is_available')->default(false);
+            $table->integer('active_conversations')->default(0);
+            $table->boolean('is_online')->default(false);
             $table->boolean('first_time')->default(true);
             $table->rememberToken();
             $table->timestamps();

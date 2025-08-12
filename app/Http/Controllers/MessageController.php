@@ -6,6 +6,7 @@ use App\Models\Conversation;
 use App\Models\Escalation;
 use \App\Service\AIChatService;
 use App\Models\Message;
+use App\Service\AgentQueueService;
 use Illuminate\Http\Request;
 
 class MessageController extends Controller
@@ -32,7 +33,7 @@ class MessageController extends Controller
         }
         
         if($this->shouldTransferToAgent($conversation->id)) {
-            $this->escalateConversation($conversation);
+            return $this->escalateConversation($conversation);
         }
         
         $response = $this->chatWithAI($conversation->id, $message);
@@ -63,14 +64,23 @@ class MessageController extends Controller
     }
     
     public function escalateConversation(Conversation $conversation) {
-        $conversation->agent_id = 2;
-        $conversation->status = 'escalated';
-        $conversation->save();
+        
+        $agent = app(AgentQueueService::class)->assignAgent($conversation);
+
+        if(!$agent) {
+            return response()->json(['status' => false, 'message' => 'No available agents at the moment.'], 503);
+        }
         
         Escalation::create([
             'conversation_id' => $conversation->id,
-            'escalated_to' => 2, // Assuming agent ID 9 is the one to transfer to
+            'escalated_to' => $agent->id,
             'escalated_at' => now(),
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Please what while I connect you to an agent.',
+            'agent' => $agent,
         ]);
         
     }
