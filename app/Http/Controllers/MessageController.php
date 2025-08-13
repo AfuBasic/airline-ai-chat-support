@@ -20,13 +20,16 @@ class MessageController extends Controller
 
     //    return $conversation->PendingChatPool;
         
-        Message::create([
+       $message = Message::create([
             'conversation_id' => $conversation->id,
             'message' => $request->message,
         ]);
         
          if($conversation->agent || $conversation->PendingChatPool) {
-            return "Chatting with AGent now!";
+            return response()->json([
+                'status' => true,
+                'message' => $message,
+            ]);
         }
 
         $message = "Please transfer me to an agent";
@@ -42,7 +45,7 @@ class MessageController extends Controller
         $response = $this->chatWithAI($conversation->id, $message);
         return response()->json([
             'status' => true,
-            'data' => $response['choices'][0]['message']['content'],
+            'message' => $response['choices'][0]['message']['content'],
         ]);
         
         
@@ -57,13 +60,13 @@ class MessageController extends Controller
     public function chatWithAI($conversation_id, $message) {
         $response = AIChatService::sendMessageToAI($message);
         
-        Message::create([
+        $message = Message::create([
             'conversation_id' => $conversation_id,
             'message' => $response['choices'][0]['message']['content'],
             'direction' => 'outbound', // Assuming this is an outbound message
         ]);
         
-        return $response;
+        return $message;
     }
     
     public function escalateConversation(Conversation $conversation) {
