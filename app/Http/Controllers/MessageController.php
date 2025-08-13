@@ -6,6 +6,7 @@ use App\Models\Conversation;
 use App\Models\Escalation;
 use \App\Service\AIChatService;
 use App\Models\Message;
+use App\Models\PendingChatPool;
 use App\Service\AgentQueueService;
 use Illuminate\Http\Request;
 
@@ -17,15 +18,17 @@ class MessageController extends Controller
             'message' => 'required'
         ]);
 
-        if($conversation->agent) {
-            return "Chatting with AGent now!";
-        }
+    //    return $conversation->PendingChatPool;
         
         Message::create([
             'conversation_id' => $conversation->id,
             'message' => $request->message,
         ]);
         
+         if($conversation->agent || $conversation->PendingChatPool) {
+            return "Chatting with AGent now!";
+        }
+
         $message = "Please transfer me to an agent";
         
         if($conversation->agent == null && !$this->shouldTransferToAgent($conversation->id)) {
@@ -68,6 +71,9 @@ class MessageController extends Controller
         $agent = app(AgentQueueService::class)->assignAgent($conversation);
 
         if(!$agent) {
+            PendingChatPool::create([
+                'conversation_id'=> $conversation->id,
+            ]);
             return response()->json(['status' => false, 'message' => 'No available agents at the moment.'], 503);
         }
         

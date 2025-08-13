@@ -21,4 +21,8 @@ class Conversation extends Model
     public function escalation(): HasOne {
         return $this->hasOne(Escalation::class);
     }
+
+    public function pendingChatPool(): HasOne {
+        return $this->hasOne(PendingChatPool::class);
+    }
 }

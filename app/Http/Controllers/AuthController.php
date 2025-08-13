@@ -27,6 +27,9 @@ class AuthController
 
         $user->tokens()->delete();
         Auth::login($user);
+        $user->is_online = true;
+        $user->is_available = true;
+        $user->save();
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
@@ -37,6 +40,9 @@ class AuthController
 
     public function logout(Request $request) {
         $request->user()->tokens()->delete();
+        $request->user()->is_online = false;
+        $request->user()->is_available = false;
+        $request->user()->save();
         return response()->json(['message' => 'Logged out successfully']);
     }
 }
