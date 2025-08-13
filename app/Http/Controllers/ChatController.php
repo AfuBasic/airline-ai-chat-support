@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Conversation;
 use App\Models\Message;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ChatController extends Controller
@@ -33,5 +34,19 @@ class ChatController extends Controller
         ]);
         
         return response()->json(['status'=> true,'data'=> '']);
+    }
+
+    /**
+     * Get messages for a conversation
+     * 
+     * @return JsonResponse
+     */
+    public function getMessages(Conversation $conversation): JsonResponse {
+        $messages = $conversation->messages()->latest()->paginate();
+        
+        return response()->json([
+            'status' => true,
+            'data' => $messages
+        ]);
     }
 }
