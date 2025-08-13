@@ -88,8 +88,9 @@ class MessageController extends Controller
         
         $message = Message::create([
             'conversation_id' => $conversation->id,
-            'message' => 'Please what while I connect you to an agent.',
+            'message' => $agent->name . ' has joined the conversation',
             'direction' => 'outbound', // Assuming this is an outbound message
+            'message_type' => 'event',
         ]);
         
         return response()->json([

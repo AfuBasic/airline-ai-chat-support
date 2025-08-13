@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('agent_id')->nullable();
             $table->enum('direction', ['inbound', 'outbound'])->default('inbound');
             $table->text('message');
-
+            $table->enum('message_type', ['chat','event'])->default('chat');
             $table->timestamps();
         });
     }
