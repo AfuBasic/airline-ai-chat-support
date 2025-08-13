@@ -13,22 +13,25 @@ use Illuminate\Http\Request;
 class MessageController extends Controller
 {
     public function sendMessage(Request $request, Conversation $conversation) {
-
+        
         $request->validate([
             'message' => 'required'
         ]);
-
-    //    return $conversation->PendingChatPool;
         
-        Message::create([
+        //    return $conversation->PendingChatPool;
+        
+        $message = Message::create([
             'conversation_id' => $conversation->id,
             'message' => $request->message,
         ]);
         
-         if($conversation->agent || $conversation->PendingChatPool) {
-            return "Chatting with AGent now!";
+        if($conversation->agent || $conversation->PendingChatPool) {
+            return response()->json([
+                'status' => true,
+                'data' => $message,
+            ]);
         }
-
+        
         $message = "Please transfer me to an agent";
         
         if($conversation->agent == null && !$this->shouldTransferToAgent($conversation->id)) {
@@ -42,7 +45,7 @@ class MessageController extends Controller
         $response = $this->chatWithAI($conversation->id, $message);
         return response()->json([
             'status' => true,
-            'data' => $response['choices'][0]['message']['content'],
+            'data' => $response,
         ]);
         
         
@@ -57,24 +60,24 @@ class MessageController extends Controller
     public function chatWithAI($conversation_id, $message) {
         $response = AIChatService::sendMessageToAI($message);
         
-        Message::create([
+        $message = Message::create([
             'conversation_id' => $conversation_id,
             'message' => $response['choices'][0]['message']['content'],
             'direction' => 'outbound', // Assuming this is an outbound message
         ]);
         
-        return $response;
+        return $message;
     }
     
     public function escalateConversation(Conversation $conversation) {
         
         $agent = app(AgentQueueService::class)->assignAgent($conversation);
-
+        
         if(!$agent) {
             PendingChatPool::create([
                 'conversation_id'=> $conversation->id,
             ]);
-            return response()->json(['status' => false, 'message' => 'No available agents at the moment.'], 503);
+            return response()->json(['status' => false, 'message' => 'Connecting you to a human agent, please wait for a few minutes']);
         }
         
         Escalation::create([
@@ -82,10 +85,17 @@ class MessageController extends Controller
             'escalated_to' => $agent->id,
             'escalated_at' => now(),
         ]);
-
+        
+        $message = Message::create([
+            'conversation_id' => $conversation->id,
+            'message' => $agent->name . ' has joined the conversation',
+            'direction' => 'outbound', // Assuming this is an outbound message
+            'message_type' => 'event',
+        ]);
+        
         return response()->json([
             'status' => true,
-            'message' => 'Please what while I connect you to an agent.',
+            'data' => $message,
             'agent' => $agent,
         ]);
         
