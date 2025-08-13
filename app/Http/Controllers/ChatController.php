@@ -14,4 +14,15 @@ class ChatController extends Controller
 
         return $chat;
     }
+
+    public function joinChat(Request $request, Conversation $conversation) {
+        if (!$conversation) {
+            return response()->json(['status' => false, 'message' => 'Conversation not found'], 404);
+        }
+
+        // Logic to join the chat can be added here
+        $conversation->agent_id = $request->user()->id; 
+        $conversation->save();
+
+        return response()->json(['status'=> true,'message'=> '']);
 }

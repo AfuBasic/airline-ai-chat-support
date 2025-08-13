@@ -19,9 +19,14 @@ Route::middleware('auth:sanctum')->group(function() {
 
 Route::group(['prefix' => 'chat'], function() {
     Route::get('/start', [ChatController::class,'startChat']);
+    
+    Route::get('/{conversation}/join', [ChatController::class,'joinChat'])->middleware('auth:sanctum');
+
     Route::group(['prefix' => '{conversation}'], function() {
         Route::post('/message/send', [MessageController::class,'sendMessage']);
         Route::post('/message/send/agent', [MessageController::class,'sendAgentMessage']);
     });
+
+
 
 });
