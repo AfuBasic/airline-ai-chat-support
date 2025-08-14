@@ -32,9 +32,14 @@ class AuthController
         $user->save();
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        $except = ['created_at','updated_at','remember_token','email_verified_at','password'];
+
         return response()->json([
             'status' => true,
-            'data' => ['token' => $token]
+            'data' => [
+                'token' => $token, 
+                'user' => $user->except($except)
+            ]
         ]); 
     }
 

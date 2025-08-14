@@ -14,7 +14,6 @@ class AgentMessageController extends Controller
             'message' => 'required'
         ]);
 
-
          $message = Message::create([
             'conversation_id' => $conversation->id,
             'message' => $request->message,
