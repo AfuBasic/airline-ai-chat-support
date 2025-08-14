@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewMessgeSentEvent;
 use App\Models\Conversation;
 use App\Models\Escalation;
 use \App\Service\AIChatService;
@@ -26,6 +27,11 @@ class MessageController extends Controller
         ]);
         
         if($conversation->agent || $conversation->PendingChatPool) {
+            
+            /* 
+                Broadcast the message
+            */
+            event(new NewMessgeSentEvent($message));
             return response()->json([
                 'status' => true,
                 'data' => $message,
@@ -93,6 +99,8 @@ class MessageController extends Controller
             'message_type' => 'event',
         ]);
         
+         event(new NewMessgeSentEvent($message));
+
         return response()->json([
             'status' => true,
             'data' => $message,

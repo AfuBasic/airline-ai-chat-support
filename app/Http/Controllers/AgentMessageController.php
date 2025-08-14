@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewMessgeSentEvent;
 use App\Models\Conversation;
 use App\Models\Message;
 use Illuminate\Http\Request;
@@ -20,6 +21,8 @@ class AgentMessageController extends Controller
             'agent_id' => $request->user()->id,
             'direction' => 'outbound',
         ]);
+
+        event(new NewMessgeSentEvent($message));
 
         return $message;
     }
