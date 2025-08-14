@@ -6,33 +6,48 @@ use App\Models\Conversation;
 use App\Models\Message;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Events\NewMessgeSentEvent;
 
 class ChatController extends Controller
 {
     public function startChat() {
-        $chat = Conversation::create([
+        $conversation = Conversation::create([
             "started_at" => now(),
         ]);
+
+        $message = Message::create([
+            'conversation_id' => $conversation->id,
+            'message' => 'Chat Started',
+            'direction' => 'inbound', 
+            'message_type' => 'event',
+        ]);
         
-        return $chat;
+        event(new NewMessgeSentEvent($message));
+        
+        return $conversation;
     }
     
     public function joinChat(Request $request, Conversation $conversation) {
         if (!$conversation) {
             return response()->json(['status' => false, 'message' => 'Conversation not found'], 404);
         }
-        
-        // Logic to join the chat can be added here
+
+        /* 
+            Add an agent to an ongoing/escalated chat
+        */
+
         $conversation->agent_id = $request->user()->id; 
         $conversation->save();
         
         $message = Message::create([
             'conversation_id' => $conversation->id,
             'message' => $request->user()->name . ' has joined the conversation',
-            'direction' => 'outbound', // Assuming this is an outbound message
+            'direction' => 'outbound', 
             'message_type' => 'event',
         ]);
         
+        event(new NewMessgeSentEvent($message));
+
         return response()->json(['status'=> true,'data'=> '']);
     }
 
